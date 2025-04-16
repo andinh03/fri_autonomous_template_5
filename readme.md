@@ -34,6 +34,7 @@ make
 ```
 cd ~/bwi_ros2/src
 git clone --branch humble https://github.com/microsoft/Azure_Kinect_ROS_Driver.git
+git clone https://github.com/Living-With-Robots-Lab/apriltag_ros.git
 git clone https://github.com/utexas-bwi/bwi_ros2_common.git
 ```
 
