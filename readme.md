@@ -1,6 +1,9 @@
+## Setup
+
 Use Ctr+Shift+V to paste in terminator.
 
 ```
+# you shouldn't need to run this one (packages should already be installed)
 sudo apt update && sudo apt install libgtk-3-dev libapriltag-dev
 ```
 ```
