@@ -1,3 +1,5 @@
+Use Ctr+Shift+V to paste in terminator.
+
 ```
 sudo apt update && sudo apt install libgtk-3-dev libapriltag-dev
 ```
