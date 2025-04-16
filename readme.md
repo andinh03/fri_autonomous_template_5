@@ -44,6 +44,7 @@ git clone https://github.com/utexas-bwi/segway_rmp_ros2.git
 
 # Build
 ```
+source ~/.bashrc
 cd ~/bwi_ros2
 source /opt/ros/humble/setup.bash
 rosdep update
@@ -51,3 +52,4 @@ rosdep install --from-paths src -y --ignore-src
 colcon build
 source install/setup.bash
 ```
+There will be warnings after you build for the first time, but hopefully no errors. Remember to run colcon build in your workspace root everytime you make a change.
