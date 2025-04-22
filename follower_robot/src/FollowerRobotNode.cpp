@@ -114,7 +114,19 @@ Eigen::MatrixXd FollowerRobotNode::computeGoToFrameFromBaseLink(
 
         That's a lot of help! Go write this thing!!
     */
+    double x = base_link_to_tag1.transform.translation.x;
+    double y = base_link_to_tag1.transform.translation.y;
+    double theta = atan2(y, x);
+
+    double target_x = x - follow_distance_ * cos(theta);
+    double target_y = y - follow_distance_ * sin(theta);
+
     Eigen::MatrixXd transform = Eigen::MatrixXd::Identity(4, 4);
+    Eigen::AngleAxisd rot(theta, Eigen::Vector3d::UnitZ());
+    transform.block<3, 3>(0, 0) = rot.toRotationMatrix();
+    transform(0, 3) = target_x;
+    transform(1, 3) = target_y;
+    transform(2, 3) = 0.0;
 
     return transform;
 }
@@ -128,7 +140,13 @@ double FollowerRobotNode::computeDistanceBaseLinkTag1(
 
         Distance is just l2 norm or Euclidean distance. You've got this.
     */
-    double distance = 0.0;
+
+    double x = base_link_to_tag1.transform.translation.x;
+    double y = base_link_to_tag1.transform.translation.y;
+    double z = base_link_to_tag1.transform.translation.z;
+
+    double distance = sqrt(x * x + y * y + z * z);
+
     RCLCPP_INFO_STREAM(this->get_logger(),
         "distance:  " << distance << endl);
     return distance;  
@@ -207,7 +225,7 @@ void FollowerRobotNode::computeAndAct() {
                         the entire class, assuring that you always broadcast
                         the correct pose.
                 */
-                //m_map_to_go_to_ =
+                m_map_to_go_to_ = m_map_to_base_link * m_go_to;
         
                 move_to_target_.copyToGoalPoseAndSend(m_go_to);
             }
@@ -217,7 +235,10 @@ void FollowerRobotNode::computeAndAct() {
             Set tf1.header.stamp.
             Send using tf_broadcaster_.
         */
-        geometry_msgs::msg::TransformStamped tf1;
+        geometry_msgs::msg::TransformStamped tf1 =
+            matrixToTransform(m_map_to_go_to_, "map", "go_to");
+        tf1.header.stamp = this->now();
+        tf_broadcaster_.sendTransform(tf1);
 
     } catch (const tf2::TransformException &ex) {
         RCLCPP_WARN(this->get_logger(), "Could not transform world -> example_frame: %s", ex.what());
