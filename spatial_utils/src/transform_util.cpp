@@ -55,7 +55,7 @@ geometry_msgs::msg::TransformStamped matrixToTransform(
 
     // Rotation step
     Eigen::Matrix3d rotation = matrix.block<3, 3>(0, 0);
-    Eigen::Quaterniond q(rotation)
+    Eigen::Quaterniond q(rotation);
 
     transform_msg.transform.rotation.x = q.x();
     transform_msg.transform.rotation.y = q.y();
